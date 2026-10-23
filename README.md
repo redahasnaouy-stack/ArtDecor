@@ -1,12 +1,12 @@
 # ArtDecor
 
-Boutique dérivée de `redahasnaouy-stack/decoration.ma`, avec une identité visuelle indépendante : bleu nuit, cuivre, composition éditoriale et photographies grand format. Les fonctions de commande directe et de gestion sont conservées.
+Boutique dérivée de `redahasnaouy-stack/decoration.ma`, avec une identité visuelle indépendante : mauve profond, lavande, composition éditoriale et photographies grand format. Les fonctions de commande directe et de gestion sont conservées.
 
 Catalogue de décoration en français : grille de quatre produits sur ordinateur, recherche, filtres, fiches descriptives et dashboard privé pour gérer les produits et photos. Commande directe d’un produit avec formulaire client, sans panier. Les anciennes commandes restent consultables dans l’administration.
 
 ## Particularités ArtDecor
 
-- Thème bleu nuit et cuivre, couverture éditoriale et navigation fixe, adaptés au mobile.
+- Thème mauve et lavande, couverture éditoriale et navigation fixe, adaptés au mobile.
 - Même parcours que decoration.ma : recherche, catégories, tri, fiches produit et commande directe (sans panier).
 - Administration privée sur `/admin` : produits, photos, stock, commandes et statuts.
 - Site et stockage indépendants : aucun compte, commande ou mot de passe de decoration.ma n’est copié.
