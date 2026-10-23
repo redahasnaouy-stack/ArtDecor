@@ -21,11 +21,15 @@ db.exec(
   `PRAGMA journal_mode=WAL; CREATE TABLE IF NOT EXISTS products(id INTEGER PRIMARY KEY,name TEXT,category TEXT,price REAL,stock INTEGER,image TEXT,description TEXT); CREATE TABLE IF NOT EXISTS orders(id INTEGER PRIMARY KEY,customer TEXT,phone TEXT,address TEXT,items TEXT,total REAL,status TEXT DEFAULT 'Nouvelle',created TEXT DEFAULT CURRENT_TIMESTAMP); CREATE TABLE IF NOT EXISTS settings(key TEXT PRIMARY KEY,value TEXT);`,
 );
 if (
-  !db.prepare("SELECT value FROM settings WHERE key='catalog-revision'").get()
+  db.prepare("SELECT value FROM settings WHERE key='catalog-revision'").get()
+    ?.value !== catalogRevision
 ) {
   const state = {
     products: db.prepare("SELECT * FROM products").all(),
     nextProduct: 1,
+    stockRevision: db
+      .prepare("SELECT value FROM settings WHERE key='stock-revision'")
+      .get()?.value,
   };
   migrateCatalog(state);
   db.exec("BEGIN");

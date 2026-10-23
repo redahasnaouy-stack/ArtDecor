@@ -1,4 +1,5 @@
 import catalog from "./catalog.json" with { type: "json" };
+import previousCatalog from "./previous-catalog.json" with { type: "json" };
 const demos = new Map([
   [
     "Vase Terra",
@@ -66,26 +67,47 @@ function untouchedDemo(p) {
     )
   );
 }
+export const catalogRevision = "artdecor-engro-2026-10-23";
+function untouchedPrevious(product) {
+  return previousCatalog.some(
+    (old) =>
+      (product.sourceId === old.sourceId || product.id === old.id) &&
+      ["name", "category", "price", "stock", "image", "description"].every(
+        (key) => product[key] === old[key],
+      ),
+  );
+}
 export function migrateCatalog(state) {
-  if (state.catalogRevision === "engro-2026-10-22") {
+  if (state.catalogRevision === catalogRevision) {
     migrateStock(state);
     return;
   }
-  state.products = state.products.filter((p) => !untouchedDemo(p));
+  // Keep edited products and all historical orders. Never recycle old product IDs.
+  const previousMaximum = Math.max(0, ...state.products.map((p) => p.id));
+  state.products = state.products.filter(
+    (p) => !untouchedDemo(p) && !untouchedPrevious(p),
+  );
   let next = Math.max(
-    1001,
+    2001,
     state.nextProduct || 1,
+    previousMaximum + 1,
     ...state.products.map((p) => p.id + 1),
   );
   for (const p of catalog) {
-    if (state.products.some((x) => x.sourceId === p.sourceId)) continue;
+    if (
+      state.products.some(
+        (x) =>
+          x.sourceId === p.sourceId ||
+          (x.image === p.image && x.name === p.name),
+      )
+    )
+      continue;
     state.products.push({ ...p, id: next++ });
   }
   state.nextProduct = next;
-  state.catalogRevision = "engro-2026-10-22";
+  state.catalogRevision = catalogRevision;
   migrateStock(state);
 }
-export const catalogRevision = "engro-2026-10-22";
 
 export const stockRevision = "engro-stock-10-v1";
 function migrateStock(state) {
